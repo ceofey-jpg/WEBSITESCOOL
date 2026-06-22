@@ -175,6 +175,7 @@ async function getDashboardFor(role, userId) {
   const [{ count: totalStudents }] = await query('SELECT COUNT(*) AS count FROM students');
   const [{ count: totalTeachers }] = await query('SELECT COUNT(*) AS count FROM teachers');
   const [{ count: totalClasses }] = await query('SELECT COUNT(*) AS count FROM classes');
+  const [{ count: totalAnnouncements }] = await query('SELECT COUNT(*) AS count FROM announcements');
   const [latestAnnouncement] = await query('SELECT title, content, audience, author, created_at FROM announcements ORDER BY id DESC LIMIT 1');
 
   if (role === 'student') {
@@ -185,17 +186,17 @@ async function getDashboardFor(role, userId) {
        JOIN teachers ON classes.teacher_id = teachers.id
        JOIN users ON teachers.user_id = users.id`
     );
-    return { welcome: 'Halo, ' + student.name, role, totalStudents, totalTeachers, totalClasses, classes, latestAnnouncement };
+    return { welcome: 'Halo, ' + student.name, role, totalStudents, totalTeachers, totalClasses, totalAnnouncements, classes, latestAnnouncement };
   }
 
   if (role === 'teacher') {
     const user = await findUserById(userId);
     const [teacher] = await query('SELECT id, subject FROM teachers WHERE user_id = ?', [userId]);
     const classes = await query('SELECT classes.id, classes.name, classes.schedule FROM classes WHERE classes.teacher_id = ?', [teacher.id]);
-    return { welcome: 'Halo, ' + user.name, role, totalStudents, totalTeachers, totalClasses, classes, latestAnnouncement };
+    return { welcome: 'Halo, ' + user.name, role, totalStudents, totalTeachers, totalClasses, totalAnnouncements, classes, latestAnnouncement };
   }
 
-  return { welcome: 'Halo, Admin', role, totalStudents, totalTeachers, totalClasses, latestAnnouncement, suggestions: ['Perbarui pengumuman sekolah', 'Tambah data siswa dan guru baru', 'Kelola kelas dan jadwal'] };
+  return { welcome: 'Halo, Admin', role, totalStudents, totalTeachers, totalClasses, totalAnnouncements, latestAnnouncement, suggestions: ['Perbarui pengumuman sekolah', 'Tambah data siswa dan guru baru', 'Kelola kelas dan jadwal'] };
 }
 
 async function listStudents() {

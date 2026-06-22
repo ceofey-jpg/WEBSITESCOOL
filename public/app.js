@@ -213,6 +213,10 @@ function renderOverviewCards() {
         <h3>Total Kelas</h3>
         <p class="badge">${state.dashboard.totalClasses}</p>
       </div>
+      <div class="card">
+        <h3>Total Pengumuman</h3>
+        <p class="badge">${state.dashboard.totalAnnouncements}</p>
+      </div>
     </div>
   `;
 }
