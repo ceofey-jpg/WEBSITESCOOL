@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: smanegeri_portal
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql-data:/var/lib/mysql
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - '4000:4000'
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      DB_DATABASE: smanegeri_portal
+      SESSION_SECRET: change_this_secret
+      NODE_ENV: production
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+volumes:
+  mysql-data:

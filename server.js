@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const bcrypt = require('bcrypt');
@@ -9,7 +10,17 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const SECRET = process.env.SESSION_SECRET || 'SMANEGERI_SECRET_2026';
 
-initializeDatabase();
+async function start() {
+  await initializeDatabase();
+  app.listen(PORT, () => {
+    console.log(`Server berjalan di http://localhost:${PORT}`);
+  });
+}
+
+start().catch((error) => {
+  console.error('Gagal memulai server:', error);
+  process.exit(1);
+});
 
 app.use(express.json());
 app.use(cookieParser());
